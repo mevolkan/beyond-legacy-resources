@@ -4,8 +4,8 @@
         <?php
         // Display the post thumbnail
         if (has_post_thumbnail()) {
-            the_post_thumbnail('medium');
-        }
+            the_post_thumbnail('medium_large');
+            }
         ?>
     </div>
     <div class="resource-main">
@@ -21,9 +21,9 @@
             foreach ($tags as $tag) {
                 // echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '">' . esc_html($tag->name) . '</a> ';
                 echo esc_html($tag->name);
-            }
+                }
             echo '</p>';
-        } ?>
+            } ?>
         <div class="resource-footer">
 
             <?php
@@ -34,16 +34,16 @@
                 foreach ($categories as $category) {
                     // echo '<a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a> ';
                     echo '<span>' . esc_html($category->name) . '</span> ';
-                }
+                    }
                 echo '</p>';
-            }
+                }
             // Custom price field
             $resource_price = get_post_meta(get_the_ID(), '_resource_price', true);
             if (!empty($resource_price)) {
                 echo '<p class="resource-price">Price: ' . esc_html($resource_price) . '</p>';
-            } else {
+                } else {
                 echo '<p class="resource-price">Free</p>';
-            }
+                }
             ?>
         </div>
 

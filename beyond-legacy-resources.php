@@ -206,10 +206,15 @@ function resource_loop_shortcode($atts)
 	{
 	ob_start(); // Start output buffering
 
+	// Define default values for attributes
 	$atts = shortcode_atts(
 		array(
 			'count' => 10,
 			// Number of posts to display
+			'limit' => 6,
+			// Default value for the limit attribute
+			'columns' => 3,
+			// Default value for the columns attribute
 		),
 		$atts
 	);
@@ -237,4 +242,3 @@ function resource_loop_shortcode($atts)
 	return ob_get_clean(); // Return the buffered output
 	}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
-
