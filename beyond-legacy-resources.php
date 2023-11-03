@@ -95,12 +95,12 @@ function render_resource_url_metabox($post)
 {
 	// Retrieve the saved URL, if any
 	$resource_url = get_post_meta($post->ID, '_resource_url', true);
-	?>
+?>
 	<label for="resource-url">Enter a Custom URL:</label>
 	<input type="text" id="resource-url" name="resource_url" value="<?php echo esc_attr($resource_url); ?>">
 	or Pick from Media Library:
 	<input type="button" id="upload-media-button" class="button" value="Pick from Media Library">
-	<?php
+<?php
 }
 
 function save_resource_url_metabox($post_id)
@@ -117,69 +117,85 @@ function save_resource_url_metabox($post_id)
 add_action('save_post', 'save_resource_url_metabox');
 
 add_action('admin_enqueue_scripts', 'load_wp_media_files');
-function load_wp_media_files($page)
+function load_wp_media_files()
 {
 	// change to the $page where you want to enqueue the script
 	//   if( $page == 'options-general.php' ) {
 	// Enqueue WordPress media scripts
 	wp_enqueue_media();
 	// Enqueue custom script that will interact with wp.media
-	wp_enqueue_script('myprefix_script', plugins_url('/js/mediafiles.js', __FILE__), array('jquery'), '0.1');
+	wp_enqueue_script('resources_script', plugins_url('/js/mediafiles.js', __FILE__), array('jquery'), '0.1');
 	//   }
 }
 
-function add_resource_price_meta_box() {
-    add_meta_box('resource_price_meta', 'Resource Price', 'render_resource_price_meta_box', 'resource', 'normal', 'high');
+function add_resource_price_meta_box()
+{
+	add_meta_box('resource_price_meta', 'Resource Price', 'render_resource_price_meta_box', 'resource', 'normal', 'high');
 }
 add_action('add_meta_boxes', 'add_resource_price_meta_box');
 
-function render_resource_price_meta_box($post) {
-    // Retrieve the saved price, if any
-    $resource_price = get_post_meta($post->ID, '_resource_price', true);
-    ?>
-    <label for="resource-price">Resource Price:</label>
-    <input type="text" id="resource-price" name="resource_price" value="<?php echo esc_attr($resource_price); ?>">
-    <?php
+function render_resource_price_meta_box($post)
+{
+	// Retrieve the saved price, if any
+	$resource_price = get_post_meta($post->ID, '_resource_price', true);
+?>
+	<label for="resource-price">Resource Price:</label>
+	<input type="text" id="resource-price" name="resource_price" value="<?php echo esc_attr($resource_price); ?>">
+<?php
 }
 
-function save_resource_price_meta_box($post_id) {
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-    if (!current_user_can('edit_post', $post_id)) return;
+function save_resource_price_meta_box($post_id)
+{
+	if ( defined( 'DOING_AUTOSAVE') && DOING_AUTOSAVE )
+		return;
+	if (! current_user_can('edit_post', $post_id ) )
+		return;
 
-    if (isset($_POST['resource_price'])) {
-        update_post_meta($post_id, '_resource_price', sanitize_text_field($_POST['resource_price']));
-    }
+	if (isset($_POST['resource_price'])) {
+		update_post_meta($post_id, '_resource_price', sanitize_text_field($_POST['resource_price']));
+	}
 }
-add_action('save_post', 'save_resource_price_meta_box');
+add_action( 'save_post', 'save_resource_price_meta_box' );
 
 /* Filter the single_template with our custom function*/
 
-function load_resource_single_template($template) {
-    if (is_single() && get_post_type() == 'resource') {
-        $theme_file = locate_template(array('single-resource.php'));
-        if ($theme_file) {
-            return $theme_file;
-        } else {
-            return plugin_dir_path(__FILE__) . '/includes/templates/single-resource.php';
-        }
-    }
-    return $template;
+function load_resource_single_template($template)
+{
+	if ( is_single() && get_post_type() === 'resource') {
+		$theme_file = locate_template(array('single-resource.php'));
+		if ( $theme_file ) {
+			return $theme_file;
+		} else {
+			return plugin_dir_path( __FILE__ ) . '/includes/templates/single-resource.php';
+		}
+	}
+	return $template;
 }
 
 add_filter('template_include', 'load_resource_single_template');
 
-function load_resource_archive_template($template) {
-    if (is_post_type_archive('resource')) {
-        $theme_file = locate_template(array('archive-resource.php'));
-        if ($theme_file) {
-            return $theme_file;
-        } else {
-            return plugin_dir_path(__FILE__) . '/includes/templates/archive-resource.php';
-        }
-    }
-    return $template;
+function load_resource_archive_template($template)
+{
+	if (is_post_type_archive('resource')) {
+		$theme_file = locate_template(array('archive-resource.php'));
+		if ($theme_file) {
+			return $theme_file;
+		} else {
+			return plugin_dir_path(__FILE__) . '/includes/templates/archive-resource.php';
+		}
+	}
+	return $template;
 }
 
-add_filter('template_include', 'load_resource_archive_template');
+add_filter('template_include', 'load_resource_archive_template' );
 
-add_action('init', 'bl_register_resource', 0);
+add_action('init', 'bl_register_resource', 0 );
+
+
+function resource_user_scripts() {
+	$plugin_url = plugin_dir_url( __FILE__ );
+
+wp_enqueue_style( 'resource_style',  $plugin_url . "/css/styles.css");
+}
+
+add_action( 'wp_enqueue_scripts', 'resource_user_scripts' );
