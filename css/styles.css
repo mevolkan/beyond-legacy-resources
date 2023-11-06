@@ -1,0 +1,30 @@
+.row.resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.row.resources .resource {
+    flex: 1 0 21%;
+    margin: 5px;
+    /* height: 100px; */
+    background-color: #D9DADA;
+}
+
+.row.resources p{
+    padding-bottom: 0;
+}
+.resource .resource-main {
+    background-color: #D9DADA;
+    padding: 20px;
+}
+
+.resource .resource-footer {
+    display: flex;
+    justify-content: space-between
+}
+
+.resource .resource-title,
+.resource p.resource-price {
+    font-weight: bold;
+}

@@ -1,0 +1,1 @@
+use shortcode [resource-loop] to display resources in yOur content.
