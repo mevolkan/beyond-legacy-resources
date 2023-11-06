@@ -62,7 +62,7 @@ function bl_register_resource(): void
 		],
 		'taxonomies' => [
 			'category',
-			'post_tag'
+			'post_tag',
 		],
 		'hierarchical' => true,
 		'public' => true,
@@ -155,7 +155,7 @@ add_action('save_post', 'save_resource_price_meta_box');
 /* Filter the single_template with our custom function*/
 
 function load_resource_single_template($template) {
-    if (is_single() && get_post_type() == 'resource') {
+    if (is_single() && get_post_type() === 'resource') {
         $theme_file = locate_template(array('single-resource.php'));
         if ($theme_file) {
             return $theme_file;
