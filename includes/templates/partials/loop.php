@@ -1,4 +1,4 @@
-<div class="resource">
+<a class="resource" href="<?php echo esc_url(the_permalink()) ?>">
     <div class="resource-header">
         <?php
         // Display the post thumbnail
@@ -44,4 +44,4 @@
             ?>
         </div>
     </div>
-</div>
+</a>

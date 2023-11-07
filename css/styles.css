@@ -3,19 +3,23 @@
     grid-template-columns: auto auto auto;
     gap: 20px;
 }
-.row.resources::before{
+
+.row.resources::before {
     display: none;
 }
+
 .row.resources .resource {
     /* flex: 1 0 31%; */
     margin: 5px;
     /* height: 100px; */
     background-color: #D9DADA;
+    color: #000;
 }
 
-.row.resources p{
+.row.resources p {
     padding-bottom: 0;
 }
+
 .resource .resource-main {
     background-color: #D9DADA;
     padding: 20px;
@@ -30,6 +34,7 @@
 .resource p.resource-price {
     font-weight: bold;
 }
-.resource .resource-header img{
+
+.resource .resource-header img {
     width: 100%;
 }

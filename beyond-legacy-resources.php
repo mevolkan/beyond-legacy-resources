@@ -204,19 +204,24 @@ add_action('wp_enqueue_scripts', 'resource_user_scripts');
 
 function resource_loop_shortcode($atts)
 	{
+	global $wp_query;
 	ob_start(); // Start output buffering
 
 	$atts = shortcode_atts(
 		array(
-			'count' => 10,
-			// Number of posts to display
+			'count' => 6,
+			//posts per page
+			'limit' => 6,
+			'columns' => 3
 		),
 		$atts
 	);
+	$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
 
 	$args = array(
 		'post_type' => 'resource',
 		'posts_per_page' => $atts['count'],
+		'paged' => $paged,
 	);
 	$loop = new WP_Query($args);
 
@@ -230,11 +235,25 @@ function resource_loop_shortcode($atts)
 			get_template_part('includes/templates/partials/loop');
 			}
 		echo '</div>';
+
+		echo '<div class="pagination">';
+		$big = 999999999; // need an unlikely integer
+		echo paginate_links(
+			array(
+				// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'total' => $loop->max_num_pages,
+				'current' => max(1, get_query_var('paged')),
+				'format' => '?paged=%#%',
+				'prev_text' => 'Previous',
+				'next_text' => 'Next',
+			)
+		);
+		echo '</div>';
 		}
 
 	wp_reset_postdata();
 
 	return ob_get_clean(); // Return the buffered output
+	wp_reset_query();
 	}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
-
