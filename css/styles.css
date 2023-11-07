@@ -1,11 +1,13 @@
 .row.resources {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto auto auto;
     gap: 20px;
 }
-
+.row.resources::before{
+    display: none;
+}
 .row.resources .resource {
-    flex: 1 0 21%;
+    /* flex: 1 0 31%; */
     margin: 5px;
     /* height: 100px; */
     background-color: #D9DADA;
@@ -27,4 +29,7 @@
 .resource .resource-title,
 .resource p.resource-price {
     font-weight: bold;
+}
+.resource .resource-header img{
+    width: 100%;
 }
