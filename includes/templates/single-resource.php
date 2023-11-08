@@ -67,7 +67,7 @@ get_header('review');
 
                         $resource_url = get_post_meta(get_the_ID(), '_resource_url', true);
                         if (!empty($resource_url)) {
-                            echo '<a class="nectar-button medium regular accent-color  regular-button" role="button" style="color: rgb(10, 49, 53); visibility: visible;" href="#" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" href="' . esc_url($resource_url) . '">Visit Resource</a>';
+                            echo '<a class="nectar-button medium regular accent-color  regular-button" role="button" style="color: rgb(10, 49, 53); visibility: visible;" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" href="' . esc_url($resource_url) . '">Visit Resource</a>';
                             }
                         ?>
                     </div>

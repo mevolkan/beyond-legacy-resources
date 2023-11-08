@@ -201,7 +201,6 @@ function resource_user_scripts()
 
 add_action('wp_enqueue_scripts', 'resource_user_scripts');
 
-
 function resource_loop_shortcode($atts)
 	{
 	global $wp_query;
@@ -257,3 +256,67 @@ function resource_loop_shortcode($atts)
 	wp_reset_query();
 	}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
+
+function add_resources_page_template( $templates )
+{
+   $templates[plugin_dir_path( __FILE__ ) . 'includes/templates/resources-template.php'] = __( 'Resource Page Template', 'resource' );
+   return $templates;
+}
+add_filter( 'theme_page_templates', 'add_resources_page_template' );
+
+function combined_resources_loop($atts)
+	{
+	global $wp_query;
+	ob_start(); // Start output buffering
+
+	$atts = shortcode_atts(
+		array(
+			'count' => 12,
+			//posts per page
+			'limit' => 12,
+			'columns' => 3
+		),
+		$atts
+	);
+	$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
+
+	$args = array(
+		'post_type' => array('resource','post'),
+		'posts_per_page' => $atts['count'],
+		'paged' => $paged,
+	);
+	$loop = new WP_Query($args);
+	include('includes/templates/partials/resources-filter.php');
+	if ($loop->have_posts()) {
+		echo '<div class="row resources">';
+		
+		while ($loop->have_posts()) {
+			$loop->the_post();
+			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
+				include('includes/templates/partials/loop.php');
+				}
+			get_template_part('includes/templates/partials/loop');
+			}
+		echo '</div>';
+
+		echo '<div class="pagination">';
+		$big = 999999999; // need an unlikely integer
+		echo paginate_links(
+			array(
+				// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'total' => $loop->max_num_pages,
+				'current' => max(1, get_query_var('paged')),
+				'format' => '?paged=%#%',
+				'prev_text' => 'Previous',
+				'next_text' => 'Next',
+			)
+		);
+		echo '</div>';
+		}
+
+	wp_reset_postdata();
+
+	return ob_get_clean(); // Return the buffered output
+	wp_reset_query();
+	}
+add_shortcode('combined-loop', 'combined_resources_loop');
