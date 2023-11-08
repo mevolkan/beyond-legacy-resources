@@ -38,3 +38,29 @@
 .resource .resource-header img {
     width: 100%;
 }
+
+/* Resource page */
+article.resource {
+    display: flex;
+    /* gap: 20px; */
+    flex-wrap: wrap;
+}
+
+@media (min-width: 690px) {
+    article.resource .resource-image {
+        width: 25%;
+    }
+}
+
+@media (min-width: 690px) {
+    article.resource .resource-content {
+        width: 75%;
+        padding: 20px;
+    }
+}
+
+@media only screen and (max-width: 690px) {
+    article.resource>* {
+        width: 100%;
+    }
+}
