@@ -16,7 +16,7 @@
  */
 
 function bl_register_resource(): void
-	{
+{
 	$labels = [
 		'name' => _x('Resource', 'Post Type General Name', 'resource'),
 		'singular_name' => _x('Resource', 'Post Type Singular Name', 'resource'),
@@ -83,28 +83,28 @@ function bl_register_resource(): void
 	$args = apply_filters('resource-args', $args);
 
 	register_post_type('resource', $args);
-	}
+}
 
 function add_url_metabox()
-	{
+{
 	add_meta_box('resource_url_metabox', 'Resource URL', 'render_resource_url_metabox', 'resource', 'normal', 'high');
-	}
+}
 add_action('add_meta_boxes', 'add_url_metabox');
 
 function render_resource_url_metabox($post)
-	{
+{
 	// Retrieve the saved URL, if any
 	$resource_url = get_post_meta($post->ID, '_resource_url', true);
-	?>
+?>
 	<label for="resource-url">Enter a Custom URL:</label>
 	<input type="text" id="resource-url" name="resource_url" value="<?php echo esc_attr($resource_url); ?>">
 	or Pick from Media Library:
 	<input type="button" id="upload-media-button" class="button" value="Pick from Media Library">
-	<?php
-	}
+<?php
+}
 
 function save_resource_url_metabox($post_id)
-	{
+{
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
 		return;
 	if (!current_user_can('edit_post', $post_id))
@@ -112,13 +112,13 @@ function save_resource_url_metabox($post_id)
 
 	if (isset($_POST['resource_url'])) {
 		update_post_meta($post_id, '_resource_url', sanitize_text_field($_POST['resource_url']));
-		}
 	}
+}
 add_action('save_post', 'save_resource_url_metabox');
 
 add_action('admin_enqueue_scripts', 'load_wp_media_files');
 function load_wp_media_files()
-	{
+{
 	// change to the $page where you want to enqueue the script
 	//   if( $page == 'options-general.php' ) {
 	// Enqueue WordPress media scripts
@@ -126,26 +126,26 @@ function load_wp_media_files()
 	// Enqueue custom script that will interact with wp.media
 	wp_enqueue_script('resources_script', plugins_url('/js/mediafiles.js', __FILE__), array('jquery'), '0.1');
 	//   }
-	}
+}
 
 function add_resource_price_meta_box()
-	{
+{
 	add_meta_box('resource_price_meta', 'Resource Price', 'render_resource_price_meta_box', 'resource', 'normal', 'high');
-	}
+}
 add_action('add_meta_boxes', 'add_resource_price_meta_box');
 
 function render_resource_price_meta_box($post)
-	{
+{
 	// Retrieve the saved price, if any
 	$resource_price = get_post_meta($post->ID, '_resource_price', true);
-	?>
+?>
 	<label for="resource-price">Resource Price:</label>
 	<input type="text" id="resource-price" name="resource_price" value="<?php echo esc_attr($resource_price); ?>">
-	<?php
-	}
+<?php
+}
 
 function save_resource_price_meta_box($post_id)
-	{
+{
 	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
 		return;
 	if (!current_user_can('edit_post', $post_id))
@@ -153,39 +153,39 @@ function save_resource_price_meta_box($post_id)
 
 	if (isset($_POST['resource_price'])) {
 		update_post_meta($post_id, '_resource_price', sanitize_text_field($_POST['resource_price']));
-		}
 	}
+}
 add_action('save_post', 'save_resource_price_meta_box');
 
 /* Filter the single_template with our custom function*/
 
 function load_resource_single_template($template)
-	{
+{
 	if (is_single() && get_post_type() === 'resource') {
 		$theme_file = locate_template(array('single-resource.php'));
 		if ($theme_file) {
 			return $theme_file;
-			} else {
+		} else {
 			return plugin_dir_path(__FILE__) . '/includes/templates/single-resource.php';
-			}
 		}
-	return $template;
 	}
+	return $template;
+}
 
 add_filter('template_include', 'load_resource_single_template');
 
 function load_resource_archive_template($template)
-	{
+{
 	if (is_post_type_archive('resource')) {
 		$theme_file = locate_template(array('archive-resource.php'));
 		if ($theme_file) {
 			return $theme_file;
-			} else {
+		} else {
 			return plugin_dir_path(__FILE__) . '/includes/templates/archive-resource.php';
-			}
 		}
-	return $template;
 	}
+	return $template;
+}
 
 add_filter('template_include', 'load_resource_archive_template');
 
@@ -193,16 +193,16 @@ add_action('init', 'bl_register_resource', 0);
 
 
 function resource_user_scripts()
-	{
+{
 	$plugin_url = plugin_dir_url(__FILE__);
 
 	wp_enqueue_style('resource_style', $plugin_url . "/css/styles.css");
-	}
+}
 
 add_action('wp_enqueue_scripts', 'resource_user_scripts');
 
 function resource_loop_shortcode($atts)
-	{
+{
 	global $wp_query;
 	ob_start(); // Start output buffering
 
@@ -230,9 +230,9 @@ function resource_loop_shortcode($atts)
 			$loop->the_post();
 			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
 				include('includes/templates/partials/loop.php');
-				}
-			get_template_part('includes/templates/partials/loop');
 			}
+			get_template_part('includes/templates/partials/loop');
+		}
 		echo '</div>';
 
 		echo '<div class="pagination">';
@@ -248,24 +248,24 @@ function resource_loop_shortcode($atts)
 			)
 		);
 		echo '</div>';
-		}
+	}
 
 	wp_reset_postdata();
 
 	return ob_get_clean(); // Return the buffered output
 	wp_reset_query();
-	}
+}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
 
 function add_resources_page_template($templates)
-	{
+{
 	$templates[plugin_dir_path(__FILE__) . 'includes/templates/resources-template.php'] = __('Resource Page Template', 'resource');
 	return $templates;
-	}
+}
 add_filter('theme_page_templates', 'add_resources_page_template');
 
 function combined_resources_loop($atts)
-	{
+{
 	global $wp_query;
 	ob_start(); // Start output buffering
 
@@ -293,9 +293,9 @@ function combined_resources_loop($atts)
 			$query->the_post();
 			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
 				include('includes/templates/partials/loop.php');
-				}
-			get_template_part('includes/templates/partials/loop');
 			}
+			get_template_part('includes/templates/partials/loop');
+		}
 		echo '</div>';
 
 		echo '<div class="pagination">';
@@ -311,49 +311,67 @@ function combined_resources_loop($atts)
 			)
 		);
 		echo '</div>';
-		}
+	}
 
 	wp_reset_postdata();
 
 	return ob_get_clean(); // Return the buffered output
 	wp_reset_query();
-	}
+}
 add_shortcode('combined-loop', 'combined_resources_loop');
 
 //Ajax Filter
 function filter_resources()
-	{
-	// check_ajax_referer('my_nonce_action', 'nonce'); // Verify the nonce
-
+{
 	$filter = sanitize_text_field($_POST['filter']); // Sanitize the filter input
 
-	if (in_array($filter, ['all', 'blogs', 'audio', 'video', 'ebooks'])) {
+	if (in_array($filter, array('all', 'blogs'))) {
 		$args = array(
-			'post_type' => ($filter === 'all') ? array('post', 'resource') : $filter,
+			'post_type' => ($filter === 'all') ? array('post', 'resource') : ($filter === 'blogs' ? 'post' : $filter),
 			'posts_per_page' => -1
 		);
+	}
 
-		$query = new WP_Query($args);
+	if (in_array($filter, array('audio', 'ebook', 'video'))) {
+		$tax_query[] = array(
+			array(
+				'taxonomy' => 'category',
+				'field' => 'slug',
+				'terms' => $filter,
+			),
+		);
+		$args = array(
+			'post_type' => array('resource', 'post'),
+			'posts_per_page' => -1,
+			'tax_query' => $tax_query
+		);
+	}
 
-		if ($query->have_posts()) {
-			while ($query->have_posts()) {
-				$query->the_post();
-				if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
-					include('includes/templates/partials/loop.php');
-					}
-				get_template_part('includes/templates/partials/loop');
-				}
+	$query = new WP_Query($args);
+
+	if ($query->have_posts()) {
+		while ($query->have_posts()) {
+			$query->the_post();
+			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
+				include('includes/templates/partials/loop.php');
 			}
+			get_template_part('includes/templates/partials/loop');
 		}
+	}
 
 	wp_die();
-	}
+}
 add_action('wp_ajax_filter_resources', 'filter_resources');
 add_action('wp_ajax_nopriv_filter_resources', 'filter_resources');
 
 
 function localize_ajax_url()
-	{
+{
 	wp_enqueue_script('resources_script', plugins_url('/js/resources-filter.js', __FILE__), array('jquery'), '0.1');
-	}
+
+	wp_localize_script( 'resources_script', 'ajaxUrl',
+	array( 
+		'ajaxurl' => admin_url( 'admin-ajax.php' ),
+	)
+);}
 add_action('wp_enqueue_scripts', 'localize_ajax_url');

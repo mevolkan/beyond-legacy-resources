@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
         };
 
         $.ajax({
-            url: '/wp-admin/admin-ajax.php',
+            url: ajaxUrl.ajaxurl,
             type: 'post',
             data: data,
             success: function (response) {
