@@ -4,7 +4,7 @@
  * Description: This plugin adds a Resource Post Type to your WordPress website.
  * Version: 1.0.0
  * Author: Samuel Nzaro
- * Author URI: https://wpturbo.dev
+ * Author URI: https://github.com/mevolkan
  */
 
 /**
