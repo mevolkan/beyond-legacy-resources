@@ -257,12 +257,12 @@ function resource_loop_shortcode($atts)
 	}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
 
-function add_resources_page_template( $templates )
-{
-   $templates[plugin_dir_path( __FILE__ ) . 'includes/templates/resources-template.php'] = __( 'Resource Page Template', 'resource' );
-   return $templates;
-}
-add_filter( 'theme_page_templates', 'add_resources_page_template' );
+function add_resources_page_template($templates)
+	{
+	$templates[plugin_dir_path(__FILE__) . 'includes/templates/resources-template.php'] = __('Resource Page Template', 'resource');
+	return $templates;
+	}
+add_filter('theme_page_templates', 'add_resources_page_template');
 
 function combined_resources_loop($atts)
 	{
@@ -281,17 +281,16 @@ function combined_resources_loop($atts)
 	$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
 
 	$args = array(
-		'post_type' => array('resource','post'),
+		'post_type' => array('resource', 'post'),
 		'posts_per_page' => $atts['count'],
 		'paged' => $paged,
 	);
-	$loop = new WP_Query($args);
+	$query = new WP_Query($args);
 	include('includes/templates/partials/resources-filter.php');
-	if ($loop->have_posts()) {
-		echo '<div class="row resources">';
-		
-		while ($loop->have_posts()) {
-			$loop->the_post();
+	if ($query->have_posts()) {
+		echo '<div class="row resources filtered-results">';
+		while ($query->have_posts()) {
+			$query->the_post();
 			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
 				include('includes/templates/partials/loop.php');
 				}
@@ -304,7 +303,7 @@ function combined_resources_loop($atts)
 		echo paginate_links(
 			array(
 				// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-				'total' => $loop->max_num_pages,
+				'total' => $query->max_num_pages,
 				'current' => max(1, get_query_var('paged')),
 				'format' => '?paged=%#%',
 				'prev_text' => 'Previous',
@@ -320,3 +319,41 @@ function combined_resources_loop($atts)
 	wp_reset_query();
 	}
 add_shortcode('combined-loop', 'combined_resources_loop');
+
+//Ajax Filter
+function filter_resources()
+	{
+	// check_ajax_referer('my_nonce_action', 'nonce'); // Verify the nonce
+
+	$filter = sanitize_text_field($_POST['filter']); // Sanitize the filter input
+
+	if (in_array($filter, ['all', 'blogs', 'audio', 'video', 'ebooks'])) {
+		$args = array(
+			'post_type' => ($filter === 'all') ? array('post', 'resource') : $filter,
+			'posts_per_page' => -1
+		);
+
+		$query = new WP_Query($args);
+
+		if ($query->have_posts()) {
+			while ($query->have_posts()) {
+				$query->the_post();
+				if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
+					include('includes/templates/partials/loop.php');
+					}
+				get_template_part('includes/templates/partials/loop');
+				}
+			}
+		}
+
+	wp_die();
+	}
+add_action('wp_ajax_filter_resources', 'filter_resources');
+add_action('wp_ajax_nopriv_filter_resources', 'filter_resources');
+
+
+function localize_ajax_url()
+	{
+	wp_enqueue_script('resources_script', plugins_url('/js/resources-filter.js', __FILE__), array('jquery'), '0.1');
+	}
+add_action('wp_enqueue_scripts', 'localize_ajax_url');
