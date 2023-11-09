@@ -358,7 +358,7 @@ function filter_resources()
 			get_template_part('includes/templates/partials/loop');
 		}
 	} else {
-		echo 'No Resource found'
+		echo 'No Resource found';
 	}
 
 	wp_die();
