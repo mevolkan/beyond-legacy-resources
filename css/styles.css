@@ -1,12 +1,13 @@
 .row.resources {
     display: grid;
     /* grid-template-columns: auto auto auto; */
-    gap: 20px;
+    gap: 40px;
 }
 
 @media (min-width: 690px) {
     .row.resources {
         grid-template-columns: auto auto;
+        gap:20px;
     }
 }
 @media (min-width: 768px) {
