@@ -7,6 +7,10 @@
  * Author URI: https://github.com/mevolkan
  */
 
+ if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 /**
  * Registers a custom post type 'resource'.
  *

@@ -3,6 +3,10 @@
 Template Name: Resource Page template
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 get_header(); // Include your header template
 
 

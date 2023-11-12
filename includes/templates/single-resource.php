@@ -3,6 +3,9 @@
 Template Name: Full-width page layout
 Template Post Type: resource
 */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
 get_header('review');
 ?>
