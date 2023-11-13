@@ -1,21 +1,10 @@
 {
-    "repositories": [
-      {
-        "type": "git",
-        "url": "https://github.com/WordPress/WordPress-Coding-Standards.git"
-      }
-    ],
     "require-dev": {
-      "wp-coding-standards/wpcs": "3.0",
-        "squizlabs/php_codesniffer": "^3.7",
-        "friendsofphp/php-cs-fixer": "^3.37"
+        "wp-coding-standards/wpcs": "^3.0"
     },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
-    },
-    "require": {
-        "phpcsstandards/phpcsutils": "^1.0"
     }
 }
