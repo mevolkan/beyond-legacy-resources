@@ -3,7 +3,7 @@
         <?php
         // Display the post thumbnail
         if (has_post_thumbnail()) {
-            the_post_thumbnail('medium_large');
+            the_post_thumbnail('medium');
             }
         ?>
     </div>

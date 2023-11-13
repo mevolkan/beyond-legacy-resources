@@ -4,8 +4,19 @@
  * Description: This plugin adds a Resource Post Type to your WordPress website.
  * Version: 1.0.0
  * Author: Samuel Nzaro
- * Author URI: https://wpturbo.dev
+ * Author URI: https://github.com/mevolkan
  */
+
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly
+	}
+
+if (!class_exists('Beyond_Legacy_Resources')) {
+	class Beyond_Legacy_Resources
+		{
+
+		}
+	}
 
 /**
  * Registers a custom post type 'resource'.
@@ -62,14 +73,14 @@ function bl_register_resource(): void
 		],
 		'taxonomies' => [
 			'category',
-			'post_tag'
+			'post_tag',
 		],
 		'hierarchical' => true,
 		'public' => true,
 		'show_ui' => true,
 		'show_in_menu' => true,
 		'menu_position' => 5,
-		'menu_icon' => 'dashicons-admin-post',
+		'menu_icon' => 'dashicons-media-text',
 		'show_in_admin_bar' => true,
 		'show_in_nav_menus' => true,
 		'publicly_queryable' => true,
@@ -191,7 +202,6 @@ add_filter('template_include', 'load_resource_archive_template');
 
 add_action('init', 'bl_register_resource', 0);
 
-
 function resource_user_scripts()
 	{
 	$plugin_url = plugin_dir_url(__FILE__);
@@ -201,27 +211,27 @@ function resource_user_scripts()
 
 add_action('wp_enqueue_scripts', 'resource_user_scripts');
 
-
 function resource_loop_shortcode($atts)
 	{
+	global $wp_query;
 	ob_start(); // Start output buffering
 
 	// Define default values for attributes
 	$atts = shortcode_atts(
 		array(
-			'count' => 10,
-			// Number of posts to display
+			'count' => 6,
+			//posts per page
 			'limit' => 6,
-			// Default value for the limit attribute
-			'columns' => 3,
-			// Default value for the columns attribute
+			'columns' => 3
 		),
 		$atts
 	);
+	$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
 
 	$args = array(
 		'post_type' => 'resource',
 		'posts_per_page' => $atts['count'],
+		'paged' => $paged,
 	);
 	$loop = new WP_Query($args);
 
@@ -235,10 +245,149 @@ function resource_loop_shortcode($atts)
 			get_template_part('includes/templates/partials/loop');
 			}
 		echo '</div>';
+
+		echo '<div class="pagination">';
+		$big = 999999999; // need an unlikely integer
+		echo paginate_links(
+			array(
+				// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'total' => $loop->max_num_pages,
+				'current' => max(1, get_query_var('paged')),
+				'format' => '?paged=%#%',
+				'prev_text' => 'Previous',
+				'next_text' => 'Next',
+			)
+		);
+		echo '</div>';
 		}
 
 	wp_reset_postdata();
 
 	return ob_get_clean(); // Return the buffered output
+	wp_reset_query();
 	}
 add_shortcode('resource-loop', 'resource_loop_shortcode');
+
+function add_resources_page_template($templates)
+	{
+	$templates[plugin_dir_path(__FILE__) . 'includes/templates/resources-template.php'] = __('Resource Page Template', 'resource');
+	return $templates;
+	}
+add_filter('theme_page_templates', 'add_resources_page_template');
+
+function combined_resources_loop($atts)
+	{
+	global $wp_query;
+	ob_start(); // Start output buffering
+
+	$atts = shortcode_atts(
+		array(
+			'count' => 12,
+			//posts per page
+			'limit' => 12,
+			'columns' => 3,
+		),
+		$atts
+	);
+	$paged = (get_query_var('paged')) ? absint(get_query_var('paged')) : 1;
+
+	$args = array(
+		'post_type' => array('resource', 'post'),
+		'posts_per_page' => $atts['count'],
+		'paged' => $paged,
+	);
+	$query = new WP_Query($args);
+	include('includes/templates/partials/resources-filter.php');
+	if ($query->have_posts()) {
+		echo '<div class="row resources filtered-results">';
+		while ($query->have_posts()) {
+			$query->the_post();
+			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
+				include('includes/templates/partials/loop.php');
+				}
+			get_template_part('includes/templates/partials/loop');
+			}
+		echo '</div>';
+
+		echo '<div class="pagination">';
+		$big = 999999999; // need an unlikely integer
+		echo paginate_links(
+			array(
+				// 'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'total' => $query->max_num_pages,
+				'current' => max(1, get_query_var('paged')),
+				'format' => '?paged=%#%',
+				'prev_text' => 'Previous',
+				'next_text' => 'Next',
+			)
+		);
+		echo '</div>';
+		}
+
+	wp_reset_postdata();
+
+	return ob_get_clean(); // Return the buffered output
+	wp_reset_query();
+	}
+add_shortcode('combined-loop', 'combined_resources_loop');
+
+//Ajax Filter
+function filter_resources()
+	{
+	$filter = sanitize_text_field($_POST['filter']); // Sanitize the filter input
+
+	if (in_array($filter, array('all', 'blogs'))) {
+		$args = array(
+			'post_type' => ($filter === 'all') ? array('post', 'resource') : ($filter === 'blogs' ? 'post' : $filter),
+			'posts_per_page' => -1
+		);
+		}
+
+	if (in_array($filter, array('audio', 'ebook', 'video'))) {
+		$tax_query[] = array(
+			array(
+				'taxonomy' => 'category',
+				'field' => 'slug',
+				'terms' => $filter,
+			),
+		);
+		$args = array(
+			'post_type' => array('resource', 'post'),
+			'posts_per_page' => -1,
+			'tax_query' => $tax_query
+		);
+		}
+
+	$query = new WP_Query($args);
+
+	if ($query->have_posts()) {
+		while ($query->have_posts()) {
+			$query->the_post();
+			if ('' === locate_template('includes/templates/partials/loop.php', true, false)) {
+				include('includes/templates/partials/loop.php');
+				}
+			get_template_part('includes/templates/partials/loop');
+			}
+		} else {
+		echo 'No Resource found';
+		}
+
+	wp_die();
+	}
+add_action('wp_ajax_filter_resources', 'filter_resources');
+add_action('wp_ajax_nopriv_filter_resources', 'filter_resources');
+
+
+function localize_ajax_url()
+	{
+	wp_enqueue_script('resources_script', plugins_url('/js/resources-filter.js', __FILE__), array('jquery'), '0.1');
+	wp_localize_script(
+		'resources_script',
+		'ajaxUrl',
+		array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+		)
+	);
+	}
+add_action('wp_enqueue_scripts', 'localize_ajax_url');
+
