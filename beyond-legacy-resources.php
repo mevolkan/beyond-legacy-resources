@@ -334,7 +334,7 @@ add_shortcode('combined-loop', 'combined_resources_loop');
 //Ajax Filter
 function filter_resources()
 	{
-	$filter = sanitize_text_field($_POST['filter']); 
+	$filter = sanitize_text_field($_POST['filter']);
 	if (in_array($filter, array('all', 'blogs'))) {
 		$args = array(
 			'post_type' => ($filter === 'all') ? array('post', 'resource') : ($filter === 'blogs' ? 'post' : $filter),
