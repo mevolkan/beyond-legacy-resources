@@ -170,33 +170,34 @@ add_action('save_post', 'save_resource_price_meta_box');
 
 /* Filter the single_template with our custom function*/
 
-function load_resource_single_template($template)
-	{
-	if (is_single() && get_post_type() === 'resource') {
-		$theme_file = locate_template(array('single-resource.php'));
-		if ($theme_file) {
-			return $theme_file;
-			} else {
-			return plugin_dir_path(__FILE__) . '/includes/templates/single-resource.php';
-			}
-		}
-	return $template;
+function get_template_path($template, $type) {
+    $theme_file = locate_template([$type . '-resource.php']);
+    if ($theme_file) {
+        return $theme_file;
+    } else {
+        $plugin_template = plugin_dir_path(__FILE__) . '/includes/templates/' . $type . '-resource.php';
+        if (file_exists($plugin_template)) {
+            return $plugin_template;
+        }
+    }
+    return $template;
+}
+
+function load_resource_single_template($template) {
+	if (is_single() && get_post_type() == 'resource') {
+		return get_template_path($template, 'single');
 	}
+	return $template;
+}
 
 add_filter('template_include', 'load_resource_single_template');
 
-function load_resource_archive_template($template)
-	{
+function load_resource_archive_template($template) {
 	if (is_post_type_archive('resource')) {
-		$theme_file = locate_template(array('archive-resource.php'));
-		if ($theme_file) {
-			return $theme_file;
-			} else {
-			return plugin_dir_path(__FILE__) . '/includes/templates/archive-resource.php';
-			}
-		}
-	return $template;
+		return get_template_path($template, 'archive');
 	}
+	return $template;
+}
 
 add_filter('template_include', 'load_resource_archive_template');
 
