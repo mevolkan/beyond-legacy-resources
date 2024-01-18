@@ -2,6 +2,7 @@
 
 ## Description
 Resource Post Type plugin adds a Resource Post Type to your WordPress website.
+![Resources shortcode](/screenshots/screenshots.png "[combined-loop] shortcode")
 
 ## Features
 - **Custom Post Type 'Resource':** Easily create and manage resources.
@@ -48,3 +49,8 @@ After activating the plugin, you can start using it immediately:
 ## License
 This plugin is open source and available under the GNU General Public License v2.0 or later. See the LICENSE file for more details.
 
+## To do
+- Add activation and deactivation functions to rewrite/flush urls
+- Add support for block editor
+- Add different template layouts
+- Add configuration options for the templates
