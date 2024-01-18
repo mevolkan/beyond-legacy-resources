@@ -1,15 +1,18 @@
 # Resource Post Type
 
 ## Description
+
 Resource Post Type plugin adds a Resource Post Type to your WordPress website.
 ![Resources shortcode](/screenshots/screenshots.png "[combined-loop] shortcode")
 
 ## Features
+
 - **Custom Post Type 'Resource':** Easily create and manage resources.
 - **Seamless Integration:** Works with your existing WordPress theme.
 - **Flexible Display Options:** Customize how resources are displayed on your site.
 
 ## Installation
+
 1. **Download the Plugin:**
    - Download the plugin files directly from [GitHub](https://github.com/mevolkan/beyond-legacy-resources).
 
@@ -22,6 +25,7 @@ Resource Post Type plugin adds a Resource Post Type to your WordPress website.
    - Once the installation is complete, click on 'Activate Plugin'.
 
 ## Usage
+
 After activating the plugin, you can start using it immediately:
 
 1. **Adding New Resources:**
@@ -35,22 +39,28 @@ After activating the plugin, you can start using it immediately:
    - Use shortcode [combined-loop] to display both the filter for resources and filter
 
 You can view a live example of the loop and combined loop
+
 ## Customization
+
 - **Template Overrides:** You can override the default templates provided by the plugin by creating template files in your theme directory.
 - **Styling Resources:** Add custom CSS in your theme to style the resource posts according to your website's design.
 
 ## Requirements
+
 - WordPress 6.2
 - PHP 8.1 or higher.
 
 ## Notes
+
 - Ensure your WordPress theme is compatible with custom post types.
 - Check for any plugin updates regularly for improved security and functionality.
 
 ## License
+
 This plugin is open source and available under the GNU General Public License v2.0 or later. See the LICENSE file for more details.
 
 ## To do
+
 - Add activation and deactivation functions to rewrite/flush urls
 - Add support for block editor
 - Add different template layouts
