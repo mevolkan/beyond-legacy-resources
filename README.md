@@ -34,6 +34,7 @@ After activating the plugin, you can start using it immediately:
    - Use shortcode [resource-loop] to display resources in your content.
    - Use shortcode [combined-loop] to display both the filter for resources and filter
 
+You can view a live example of the loop and combined loop
 ## Customization
 - **Template Overrides:** You can override the default templates provided by the plugin by creating template files in your theme directory.
 - **Styling Resources:** Add custom CSS in your theme to style the resource posts according to your website's design.
