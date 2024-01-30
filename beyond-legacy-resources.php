@@ -14,6 +14,9 @@ if (!defined('ABSPATH')) {
 if (!class_exists('Beyond_Legacy_Resources')) {
 	class Beyond_Legacy_Resources
 		{
+		function __construct()
+			{
+			}
 
 		}
 	}
