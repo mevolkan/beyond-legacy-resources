@@ -1,10 +1,22 @@
 {
-    "require-dev": {
-        "wp-coding-standards/wpcs": "^3.0"
-    },
+    "name": "resource/procect",
+    "description": "Resource Post Type plugin adds a Resource Post Type to your WordPress website.",
+    "type": "project",
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "install-codestandards": [
+            "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
+        ],
+        "post-install-cmd": [
+            "@install-codestandards"
+        ]
+    },
+    "require": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "wp-coding-standards/wpcs": "3.0.1"
     }
 }
